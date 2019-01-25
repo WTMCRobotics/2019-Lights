@@ -1,0 +1,5 @@
+*.vxproj.user
+
+.v15
+Debug
+Release
