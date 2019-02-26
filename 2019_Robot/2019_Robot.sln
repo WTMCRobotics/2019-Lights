@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.421
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "2019_Robot", "2019_Robot.vcxproj", "{FC968D86-EDA9-477B-BD9F-BFB94DF972FA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FC968D86-EDA9-477B-BD9F-BFB94DF972FA}.Debug|x86.ActiveCfg = Debug|Win32
+		{FC968D86-EDA9-477B-BD9F-BFB94DF972FA}.Debug|x86.Build.0 = Debug|Win32
+		{FC968D86-EDA9-477B-BD9F-BFB94DF972FA}.Release|x86.ActiveCfg = Release|Win32
+		{FC968D86-EDA9-477B-BD9F-BFB94DF972FA}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5DC468E0-59C1-4497-B028-73D40359D1E6}
+	EndGlobalSection
+EndGlobal
