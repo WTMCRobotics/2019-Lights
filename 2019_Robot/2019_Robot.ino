@@ -15,39 +15,33 @@
 
 #define stripPin  6
 #define i2cSlaveAddress 8
-#define NUM_LEDS 256
-#define BRIGHTNESS 50
+#define NUM_LEDS 300
+#define BRIGHTNESS 127
 
 // color definitions
-#define clrBLACK    0x000000
-#define clrGREEN    0x0000FF
-#define clrBLUE     0x00FF00
-#define clrRED      0xFF0000
-#define clrCYAN     0x00FFFF
-#define clrPURPLE   0xFFFF00
-#define clrYELLOW   0xFF00FF 
-#define clrWHITE    0xFFFFFF
-
-#define clrRISING   0xFFFF00   
-#define clrLOWERING 0xFF00FF   
-
+#define clrBLACK	0x000000
+#define clrBLUE		0x0000FF
+#define clrGREEN	0x00FF00
+#define clrRED		0xFF0000
+#define clrCYAN		0x00FFFF
+#define clrPURPLE	0xFFFF00
+#define clrYELLOW	0xFF00FF 
+#define clrWHITE	0xFFFFFF
+#define clrChase0	0xA00080
+#define clrChase1	0xA08000
+#define clrChase2	0xFFFF00
 // display modes
 enum eMode
 {
-	modeAllBlue		 = 'b',	// All Blue
-	modeAllGreen	 = 'g',	// All Green
-	modeAllRed		 = 'r',	// All Red
-	modeAllOff		 = 'o', // All Off  
+	modeAllWhite	= 'w',	// All Blue
+	modeAllBlue		= 'b',	// All Blue
+	modeAllGreen	= 'g',	// All Green
+	modeAllRed		= 'r',	// All Red
+	modeAllOff		= 'o', // All Off  
 
-	modeLiftRising	 = 'R', // Lift Rising
-	modeLiftLowering = 'L', // Lift Rising
-
-	modeRainbow		 = 'u', // Rainbow
-	modeRainbowCycle = 'c', // Rainbow Cycle
-
-	// modeChase 		  = 'h', // Chase
-	// modeBreath 		  = 'p', // Breathe
-	// modexxxx 			  = 's', // ??????
+	 modeChase 		= 'c', // Chase
+	 modeBreath 	= 'p', // Breathe
+	// modexxxx 	 's', // ??????
 	// modeCheckerboard 	= 't', // Checkerboard
 };
 
@@ -123,35 +117,35 @@ void loop()
 	switch (mode)
 	{
 	case modeAllBlue:
-		colorWipe(strip.Color(0, 2550, 0), 0);
+		colorWipe(strip.Color(0, 0, 255), 0);
 		break;
 
 	case modeAllGreen:
-		colorWipe(strip.Color(0, 0, 255), 0);
+		colorWipe(strip.Color(0, 255, 0), 0);
 		break;
 
 	case modeAllRed:
 		colorWipe(strip.Color(255, 0, 0), 0);
 		break;
 
+	case modeAllWhite:
+		colorWipe(strip.Color(255, 255, 255), 0);
+		break;
+
 	case modeAllOff:
 		clearAll();
 		break;
 
-	case modeLiftRising:
-		liftRising();
+	case modeChase:
+		chase();
 		break;
 
-	case modeLiftLowering:
-		liftLowering();
-		break;
+	//case modeRainbow:
+	//	rainbowFade2White(3, 3, 1);
+	//	break;
 
-	case modeRainbow:
-		rainbowFade2White(3, 3, 1);
-		break;
-
-	case modeRainbowCycle:
-		break;
+	//case modeRainbowCycle:
+	//	break;
 
 	default:
 		clearAll();
@@ -190,9 +184,6 @@ void getMode(void)
 	}
 }
 
-
-// function that executes whenever data is received from master
-// this function is registered as an event, see setup()
 void receiveEvent(int howMany)
 {
 	if (Wire.available() == 0)
@@ -204,7 +195,6 @@ void receiveEvent(int howMany)
 	}
 }
 
-
 void clearAll(void)
 {
 	for (int i = 0; i < NUM_LEDS; i++)
@@ -214,85 +204,9 @@ void clearAll(void)
 	strip.show();
 }
 
-void liftRising(void)
-{
-	switch (step)
-	{
-	case 0:
-		clearAll();
-		step++;
-		break;
-
-	case 1:
-		for (int i = 0; i < HEIGHT; i++)
-		{
-			strip.setPixelColor(leftStart1 + i, clrRISING);
-			strip.setPixelColor(rightStart1 - i, clrRISING);
-			strip.show();
-			delay(100);
-		}
-		step++;
-		break;
-
-	case 2:
-		for (int i = 0; i < HEIGHT; i++)
-		{
-			strip.setPixelColor(leftStart1 + i, clrBLACK);
-			strip.setPixelColor(rightStart1 - i, clrBLACK);
-			if (i > 0)
-			{
-				strip.setPixelColor(leftStart1 + i - 1, clrRISING);
-				strip.setPixelColor(rightStart1 + i - 1, clrRISING);
-			}
-			strip.show();
-			delay(100);
-		}
-		break;
-	}
-}
-
-void liftLowering(void)
-{
-	switch (step)
-	{
-		case 0:
-			clearAll();
-			step++;
-			break;
-
-		case 1:
-			for (int i = HEIGHT - 1; i >= 0; i--)
-			{
-
-				strip.setPixelColor(leftStart1 + i, clrLOWERING);
-				strip.setPixelColor(rightStart1 - i, clrLOWERING);
-				strip.show();
-				delay(100);
-			}
-			step++;
-			break;
-
-		case 2:
-			for (int i = HEIGHT - 1; i >= 0; i--)
-			{
-				strip.setPixelColor(leftStart1 + i, clrBLACK);
-				strip.setPixelColor(rightStart1 - i, clrBLACK);
-				if (i > 0)
-				{
-					strip.setPixelColor(leftStart1 + i + 1, clrLOWERING);
-					strip.setPixelColor(rightStart1 - i + 1, clrLOWERING);
-				}
-				strip.show();
-				delay(100);
-			}
-			break;
-	}
-}
-
-// Fill the dots one after the other with a color
 void colorWipe(uint32_t c, uint8_t wait)
 {
-	for (uint16_t i = 0; i < strip.numPixels(); i++)
+	for (uint16_t i = 0; i < 300 /*strip.numPixels()*/; i++)
 	{
 		strip.setPixelColor(i, c);
 	}
@@ -321,7 +235,6 @@ void pulseWhite(uint8_t wait)
 		strip.show();
 	}
 }
-
 
 void rainbowFade2White(uint8_t wait, int rainbowLoops, int whiteLoops) 
 {
@@ -439,8 +352,65 @@ void whiteOverRainbow(uint8_t wait, uint8_t whiteSpeed, uint8_t whiteLength)
 	}
 }
 
-void fullWhite() {
+void chase()
+{	
+	for (int i = 0; i < NUM_LEDS; i++)
+	{
+		if (Serial.peek() != -1)
+		{
+			char ch = Serial.read();
+			if (ch == 'q') return;
+			while (true) 
+			{
+				while (Serial.peek() == -1) {}
+				ch = Serial.read();
+				if (ch == 'q') return;
+				if (ch == 's') break;
+			}
+		}
 
+		switch (i)
+		{
+		case 0:
+			strip.setPixelColor(i, clrChase2);
+			break;
+		case 1:
+			strip.setPixelColor(i - 1, clrChase2);
+			strip.setPixelColor(i, clrChase1);
+			break;
+		case 2:
+			strip.setPixelColor(i - 2, clrChase2);
+			strip.setPixelColor(i - 1, clrChase1);
+			strip.setPixelColor(i, clrChase0);
+			break;
+		case NUM_LEDS - 3:
+			strip.setPixelColor(i - 1, clrBLACK);
+			strip.setPixelColor(i - 1, clrChase2);
+			strip.setPixelColor(i, clrChase1);
+			break;
+		case NUM_LEDS - 2:
+			strip.setPixelColor(i - 1, clrBLACK);
+			strip.setPixelColor(i, clrChase2);
+			break;
+		case NUM_LEDS - 1:
+			strip.setPixelColor(i, clrBLACK);
+			break;
+		default:
+			strip.setPixelColor(i-3, clrBLACK);
+			strip.setPixelColor(i-2, clrChase2);
+			strip.setPixelColor(i-1, clrChase1);
+			strip.setPixelColor(i, clrChase0);
+			break;
+		}
+		strip.show();
+		delay(10);
+	}
+	clearAll();
+	delay(100);
+}
+
+void fullWhite() 
+{
 	for (uint16_t i = 0; i < strip.numPixels(); i++) 
 	{
 		strip.setPixelColor(i, strip.Color(0, 0, 0, 255));
